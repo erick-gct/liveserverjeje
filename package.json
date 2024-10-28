@@ -1,0 +1,21 @@
+{
+  "name": "livepdf",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^4.19.2",
+    "jspdf": "^2.5.1",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
