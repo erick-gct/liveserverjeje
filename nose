@@ -1,0 +1,669 @@
+ function PDF_Mejorado(doc) {
+
+  
+
+  //VARIABLES POR  DEFECTO
+  const pageWidth = doc.internal.pageSize.getWidth()
+  const pageHeigth = doc.internal.pageSize.getHeight()
+  const x = 10;
+  const y = 10;
+  const width = pageWidth - 20;
+  const height = pageHeigth - 20;
+
+
+  //VARIABLES DEL OTRO PDF
+  //var length = array.length;
+  var i = 0;
+  var pages = 0;
+  var turno_hora = "Dia";
+  var revision = "6";
+  //var supervisor = array[0].supervisor_c_f.supervisor;
+  //var maquina = array[0].equipo_c_f.maquina;
+  //var lote = array[0].lote;
+  //var proveedor = array[0].proveedor;
+
+/* 
+  var correcciones = [];
+  var fotosEtiqueta = [];    */
+
+  var pw = doc.getPageWidth();
+  var ph = doc.getPageHeight();
+
+  /* if (length % 13 == 0) {
+    pages = parseInt(length / 13);
+  } else {
+    pages = parseInt(length / 13) + 1;
+  }
+ */
+for (let index = 1; index <= pages; index++) {
+
+    doc.addPage();
+    doc.setPage(index);
+    var limite = 13 * index;
+    var turno = array[0].turno;
+
+    if (turno == "N") {
+        turno_hora = "Noche";
+    }
+
+    //var fecha = new Date().getDate() + "/" + (new Date().getMonth() + 1) + "/" + new Date().getFullYear();
+    var fecha = "07/07/2021";
+    var paginacion = "Pagina " + index + " de " + pages;
+
+    /* --- Header documento --- */
+    doc.rect(8, 8, pw - 16, 20);
+    doc.rect(8, 8, 45, 20);
+    doc.addImage(logoSP, "PNG", 13.0, 9, 35, 18.5, "right");
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text(pw / 2, 20, analisis, { align: "center" });
+    doc.setFontSize(9);
+    doc.rect(pw - 53, 8, 45, 5);
+    doc.text(pw - 51, 11.2, "Revision:");
+    doc.rect(pw - 53, 13, 45, 5);
+    doc.text(pw - 51, 16.8, "Fecha:");
+    doc.rect(pw - 53, 18, 45, 5);
+    doc.text(pw - 51, 21.8, "Codigo:");
+    doc.setFont("helvetica", "normal");
+    doc.text(pw - 17.5, 11.2, revision, { align: "center" });
+    doc.text(pw - 17.5, 16.8, fecha, { align: "center" });
+    doc.text(pw - 17.5, 21.8, codigo, { align: "center" });
+    doc.rect(pw - 53, 23, 45, 5);
+    doc.line(pw - 33, 8, pw - 33, 23);
+    doc.text(pw - 33, 26.8, paginacion, { align: "center" });
+
+    doc.setFontSize(8);
+
+   /*  let solo_fecha = array[0].Fecha.split(" ")[0];
+    let solo_fecha_noche = array[0].fecha_actual.split(" ")[0];
+    let solo_dia = solo_fecha_noche.split("-")[2];
+    let fecha_turno = turno == "D" ? solo_fecha : solo_fecha + " Turno " + solo_dia + " " + turno_hora; */
+
+    /* if (supervisor.length * 1.5 >= 30) {
+        let strings_supervisor = supervisor.split(" ");
+        supervisor = strings_supervisor[0] + " " + strings_supervisor[1] + " " + strings_supervisor[2];
+    } */
+
+    /* --- Información de Lote --- */
+    // Fecha y Supervisor
+    doc.text(16, 33, "Fecha:");
+    doc.text(35, 33, fecha_turno);
+    doc.line(35, 35, 35 + fecha_turno.length * 1.5, 35);
+    doc.text(16, 40, "Supervisor:");
+
+    /* if (supervisor.length <= 18) {
+        doc.text(35, 40, supervisor, { maxWidth:30 });
+    } else {
+        doc.text(35, 38.1, supervisor, { maxWidth:35 });
+    } */
+    doc.line(35, 42, 55, 42);
+    // Lote y Proveedor
+    doc.text(pw / 4 + 16, 40, "Lote:");
+    doc.text(pw / 4 + 28, 40, );
+    doc.line(pw / 4 + 28, 42, pw / 4 + 68, 42);
+    doc.text(pw / 2 + 16, 40, "Proveedor:");
+   /*  if (proveedor.length <= 11) {
+        doc.text(pw / 2 + 33, 40, proveedor, { maxWidth:40 });
+    } else {
+        doc.text(pw / 2 + 33, 38.1, proveedor, { maxWidth: 45 });
+    } */
+
+    doc.line(pw / 2 + 33, 42, pw / 2 + 68, 42);
+    // Turno y Maquina
+    doc.text(pw * (3 / 4) + 16, 33, "Turno:");
+    doc.text(pw * (3 / 4) + 31, 33, turno_hora);
+    doc.line(pw * (3 / 4) + 31, 35, pw - 16, 35);
+    doc.text(pw * (3 / 4) + 16, 40, "Maquina:");
+    doc.text(pw * (3 / 4) + 31, 40, maquina);
+    doc.line(pw * (3 / 4) + 31, 42, pw - 16, 42);
+
+    /* --- Creacion de Tabla --- */
+    doc.rect(8, 50, pw - 16, 112);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7);
+    doc.text(13, 63, "Hora", null, 90);
+    doc.line(16, 50, 16, 162);
+    doc.text(21, 60, "Empaque", null);
+    doc.line(pw - 259, 50, pw - 259, 162);
+    doc.text(pw - 259 + 5, 60, "Talla", { align: "center" }, 0);
+    doc.line(pw - 249, 50, pw - 249, 162);
+    doc.text(pw - 249 + 5, 67, "Peso Bruto", null, 90);
+    doc.line(pw - 239, 50, pw - 239, 162);
+    doc.text(pw - 239 + 5, 67, "Peso Neto", null, 90);
+    doc.line(pw - 229, 50, pw - 229, 162);
+    doc.text(pw - 229 + 5, 67, "Cta./Total", null, 90);
+    doc.line(pw - 219, 50, pw - 219, 162);
+    doc.text(pw - 219 + 5, 67, "Cta./Lbs", null, 90);
+    doc.line(pw - 209, 50, pw - 209, 162);
+    doc.text(96, 60, "Uniformidad");
+    doc.text(pw - 209 + 5, 69.5, "G");
+    doc.line(pw - 199, 67, pw - 199, 162);
+    doc.text(pw - 199 + 5, 69.5, "P");
+    doc.line(pw - 189, 67, pw - 189, 162);
+    doc.text(pw - 189 + 5, 69.5, "%", { align: "center" });
+    doc.line(pw - 209, 67, pw - 8, 67);
+    doc.line(pw - 179, 50, pw - 179, 162);
+    doc.text(pw - 179 + 5, 63, "Flacidos", null, 90);
+    doc.text(pw - 179 + 5, 69.5, "%", { align: "center" });
+    doc.line(pw - 169, 50, pw - 169, 162);
+    doc.text(pw - 169 + 5, 63, "Mudados", null, 90);
+    doc.text(pw - 169 + 5, 69.5, "%", { align: "center" });
+    doc.line(pw - 159, 50, pw - 159, 162);
+    doc.text(pw - 159 + 5, 63, "Picados", null, 90);
+    doc.text(pw - 159 + 5, 69.5, "%", { align: "center" });
+    doc.line(pw - 149, 50, pw - 149, 162);
+    doc.text(pw - 149 + 5, 66.1, "Semirosados", null, 90);
+    doc.text(pw - 149 + 5, 69.5, "%", { align: "center" });
+    doc.line(pw - 139, 50, pw - 139, 162);
+    doc.text(pw - 139 + 5, 63, "Rosados", null, 90);
+    doc.text(pw - 139 + 5, 69.5, "%", { align: "center" });
+    doc.line(pw - 129, 50, pw - 129, 162);
+    doc.text(pw - 129 + 5, 65, "Quebrados", null, 90);
+    doc.text(pw - 129 + 8, 64, "en 3° seg.", null, 90);
+    doc.text(pw - 129 + 5, 69.5, "%", { align: "center" });
+    doc.line(pw - 119, 50, pw - 119, 162);
+    doc.text(pw - 119 + 5, 60, "Mal", null, 90);
+    doc.text(pw - 119 + 8, 66.3, "descabezados", null, 90);
+    doc.text(pw - 119 + 5, 69.5, "%", { align: "center" });
+    doc.line(pw - 109, 50, pw - 109, 162);
+    doc.text(pw - 109 + 5, 66.3, "Deshidratados", null, 90);
+    doc.text(pw - 109 + 5, 69.5, "%", { align: "center" });
+    doc.line(pw - 99, 50, pw - 99, 162);
+    doc.text(pw - 99 + 5, 63, "Melanosis", null, 90);
+    doc.text(pw - 99 + 5, 69.5, "%", { align: "center" });
+    doc.line(pw - 89, 50, pw - 89, 162);
+    doc.text(pw - 89 + 5, 63, "Quebrados", null, 90);
+    doc.text(pw - 89 + 5, 69.5, "%", { align: "center" });
+    doc.line(pw - 79, 50, pw - 79, 162);
+    doc.text(pw - 79 + 5, 63, "Corbatas", null, 90);
+    doc.text(pw - 79 + 5, 69.5, "%", { align: "center" });
+    doc.line(pw - 69, 50, pw - 69, 162);
+    doc.text(pw - 69 + 5, 63, "Patas", null, 90);
+    doc.text(pw - 69 + 5, 69.5, "%", { align: "center" });
+    doc.line(pw - 59, 50, pw - 59, 162);
+    doc.text(pw - 59 + 5, 63, "Deformes", null, 90);
+    doc.text(pw - 59 + 5, 69.5, "%", { align: "center" });
+    doc.line(pw - 49, 50, pw - 49, 162);
+    doc.text(pw - 49 + 5, 63, "Juveniles", null, 90);
+    doc.text(pw - 49 + 5, 69.5, "%", { align: "center" });
+    doc.line(pw - 39, 50, pw - 39, 162);
+    doc.text(pw - 39 + 5, 63, "Materiales", null, 90);
+    doc.text(pw - 39 + 8, 63, "Extraños", null, 90);
+    doc.text(pw - 39 + 5, 69.5, "%", { align: "center" });
+    doc.line(pw - 29, 50, pw - 29, 162);
+    doc.text(pw - 29 + 5, 60, "Total", null, 90);
+    doc.text(pw - 29 + 8, 63, "Defectos", null, 90);
+    doc.text(pw - 29 + 5, 69.5, "%", { align: "center" });
+    doc.line(pw - 19, 50, pw - 19, 162);
+    doc.text(pw - 19 + 10, 60, "T °C", { angle: 90, align: "center" });
+    doc.text(pw - 19 + 5, 69.5, "%", { align: "center" });
+    doc.line(8, 70, pw - 8, 70);
+    doc.line(8, 77, pw - 8, 77);
+    doc.line(8, 84, pw - 8, 84);
+    doc.line(8, 91, pw - 8, 91);
+    doc.line(8, 98, pw - 8, 98);
+    doc.line(8, 105, pw - 8, 105);
+    doc.line(8, 112, pw - 8, 112);
+    doc.line(8, 119, pw - 8, 119);
+    doc.line(8, 126, pw - 8, 126);
+    doc.line(8, 133, pw - 8, 133);
+    doc.line(8, 140, pw - 8, 140);
+    doc.line(8, 147, pw - 8, 147);
+    doc.line(8, 154, pw - 8, 154);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.text(16, 166, "*Rango de temperatura: <= 4.4°C");
+
+    /* --- Footer del documento --- */
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7);
+    doc.text(10, ph * 0.81, "Observaciones: ");
+//modificacion
+    doc.text(33, ph - 13,  { align: 'center', maxWidth:45 });
+    doc.line(8, ph - 11, 58, ph - 11);
+    doc.text(33, ph - 8, "Realizado por", { align: "center" });
+
+    doc.text(pw / 5 + 8 + 25, ph - 13,  { align: 'center', maxWidth:45 });
+    doc.line(pw / 5 + 8, ph - 11, pw / 5 + 8 + 50, ph - 11);
+    doc.text(pw / 5 + 8 + 25, ph - 8, "Supervisor de máquina", { align: "center" });
+
+    doc.text(pw * (2 / 5) + 8 + 25, ph - 13,  { align: 'center', maxWidth:45 });
+    doc.line(pw * (2 / 5) + 8, ph - 11, pw * (2 / 5) + 8 + 50, ph - 11);
+    doc.text(pw * (2 / 5) + 8 + 25, ph - 8, "Jefe de planta", { align: "center" });
+
+    doc.text(pw * (3 / 5) + 8 + 25, ph - 13, { align: 'center', maxWidth:45 });
+    doc.line(pw * (3 / 5) + 8, ph - 11, pw * (3 / 5) + 8 + 50, ph - 11);
+    doc.text(pw * (3 / 5) + 8 + 25, ph - 8, "Jefe de control calidad", { align: "center" });
+
+    doc.text(pw * (4 / 5) + 8 + 22, ph - 13,  { align: 'center', maxWidth:45 });
+    doc.line(pw * (4 / 5) + 8, ph - 11, pw - 8, ph - 11);
+    doc.text(pw * (4 / 5) + 8 + 22, ph - 8, "Verificado por", { align: "center" });
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(6);
+
+   
+    let lines = doc.splitTextToSize(Todo_obse, 341, {
+        "fontSize": 10,
+        "fontStyle": "Italic",
+        "fontName": "Times"
+    });
+    doc.text(8, ph * 0.83, lines);
+    doc.line(8, 175, pw - 8, 175);
+}
+
+
+
+//FUNCION COMPLETA
+
+
+
+var total_pages = doc.getNumberOfPages();
+var current_page = doc.getCurrentPageInfo();
+if (pages == current_page.pageNumber) {
+    doc.deletePage(total_pages);
+}
+
+
+
+
+  return doc
+}
+
+module.exports = {
+  PDF_Mejorado,
+};
+
+
+
+//FUNCION COMPLETA
+function PDF_Mejorado(doc) {
+
+  
+
+    //VARIABLES POR  DEFECTO
+    /*  const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeigth = doc.internal.pageSize.getHeight();
+    const x = 10;
+    const y = 10;
+    const width = pageWidth - 20;
+    const height = pageHeigth - 20;  */
+  
+  
+    //VARIABLES DEL OTRO PDF
+    //var length = array.length;
+    var i = 0;
+    //var pages = 0;
+    var turno_hora = "Dia";
+    var revision = "6";
+    //var supervisor = array[0].supervisor_c_f.supervisor;
+    //var maquina = array[0].equipo_c_f.maquina;
+    //var lote = array[0].lote;
+    //var proveedor = array[0].proveedor;
+  
+  /* 
+    var correcciones = [];
+    var fotosEtiqueta = [];    */
+  
+    var pw = doc.getPageWidth();
+    var ph = doc.getPageHeight();
+  
+    /* if (length % 13 == 0) {
+      pages = parseInt(length / 13);
+    } else {
+      pages = parseInt(length / 13) + 1;
+    }
+   */
+  
+  
+      /* doc.addPage(1);
+      doc.setPage(); */
+      
+      //var turno = array[0].turno;
+  
+      /* if (turno == "N") {
+          turno_hora = "Noche";
+      } */
+  
+  
+      //var fecha = new Date().getDate() + "/" + (new Date().getMonth() + 1) + "/" + new Date().getFullYear();
+      var fecha = "07/07/2021";
+      //var paginacion = "Pagina " + index + " de " + pages;
+  
+      /* --- Header documento --- */
+      doc.rect(8, 8, pw - 16, 20);
+      doc.rect(8, 8, 45, 20);
+     // doc.addImage(logoSP, "PNG", 13.0, 9, 35, 18.5, "right");
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "bold");
+      doc.text(pw / 2, 20,'  ', { align: "center" });
+      doc.setFontSize(9);
+      doc.rect(pw - 53, 8, 45, 5);
+      doc.text(pw - 51, 11.2, "Revision:");
+      doc.rect(pw - 53, 13, 45, 5);
+      doc.text(pw - 51, 16.8, "Fecha:");
+      doc.rect(pw - 53, 18, 45, 5);
+      doc.text(pw - 51, 21.8, "Codigo:");
+      doc.setFont("helvetica", "normal");
+      doc.text(pw - 17.5, 11.2, revision, { align: "center" });
+      doc.text(pw - 17.5, 16.8, fecha, { align: "center" });
+      doc.text(pw - 17.5, 21.8, ' ', { align: "center" });
+      doc.rect(pw - 53, 23, 45, 5);
+      doc.line(pw - 33, 8, pw - 33, 23);
+      doc.text(pw - 33, 26.8, "paginacion", { align: "center" });
+  
+      doc.setFontSize(8);
+  
+     /*  let solo_fecha = array[0].Fecha.split(" ")[0];
+      let solo_fecha_noche = array[0].fecha_actual.split(" ")[0];
+      let solo_dia = solo_fecha_noche.split("-")[2];
+      let fecha_turno = turno == "D" ? solo_fecha : solo_fecha + " Turno " + solo_dia + " " + turno_hora; */
+  
+      /* if (supervisor.length * 1.5 >= 30) {
+          let strings_supervisor = supervisor.split(" ");
+          supervisor = strings_supervisor[0] + " " + strings_supervisor[1] + " " + strings_supervisor[2];
+      } */
+  
+      /* --- Información de Lote --- */
+      // Fecha y Supervisor
+      doc.text(16, 33, "Fecha:");
+      doc.text(35, 33, "fecha_turno");
+      doc.line(35, 35, 35, 35);
+      doc.text(16, 40, "Supervisor:");
+  
+      /* if (supervisor.length <= 18) {
+          doc.text(35, 40, supervisor, { maxWidth:30 });
+      } else {
+          doc.text(35, 38.1, supervisor, { maxWidth:35 });
+      } */
+      doc.line(35, 42, 55, 42);
+      // Lote y Proveedor
+      doc.text(pw / 4 + 16, 40, "Lote:");
+      doc.text(pw / 4 + 28, 40, " " );
+      doc.line(pw / 4 + 28, 42, pw / 4 + 68, 42);
+      doc.text(pw / 2 + 16, 40, "Proveedor:");
+     /*  if (proveedor.length <= 11) {
+          doc.text(pw / 2 + 33, 40, proveedor, { maxWidth:40 });
+      } else {
+          doc.text(pw / 2 + 33, 38.1, proveedor, { maxWidth: 45 });
+      } */
+  
+      doc.line(pw / 2 + 33, 42, pw / 2 + 68, 42);
+      // Turno y Maquina
+      doc.text(pw * (3 / 4) + 16, 33, "Turno:");
+      doc.text(pw * (3 / 4) + 31, 33, turno_hora);
+      doc.line(pw * (3 / 4) + 31, 35, pw - 16, 35);
+      doc.text(pw * (3 / 4) + 16, 40, "Maquina:");
+      doc.text(pw * (3 / 4) + 31, 40, "  ");
+      doc.line(pw * (3 / 4) + 31, 42, pw - 16, 42);
+  
+      /* --- Creacion de Tabla --- */
+      doc.rect(8, 50, pw - 16, 112);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(7);
+      doc.text(13, 63, "Hora", null, 90);
+      doc.line(16, 50, 16, 162);
+      doc.text(21, 60, "Empaque", null);
+      doc.line(pw - 259, 50, pw - 259, 162);
+      doc.text(pw - 259 + 5, 60, "Talla", { align: "center" }, 0);
+      doc.line(pw - 249, 50, pw - 249, 162);
+      doc.text(pw - 249 + 5, 67, "Peso Bruto", null, 90);
+      doc.line(pw - 239, 50, pw - 239, 162);
+      doc.text(pw - 239 + 5, 67, "Peso Neto", null, 90);
+      doc.line(pw - 229, 50, pw - 229, 162);
+      doc.text(pw - 229 + 5, 67, "Cta./Total", null, 90);
+      doc.line(pw - 219, 50, pw - 219, 162);
+      doc.text(pw - 219 + 5, 67, "Cta./Lbs", null, 90);
+      doc.line(pw - 209, 50, pw - 209, 162);
+      doc.text(96, 60, "Uniformidad");
+      doc.text(pw - 209 + 5, 69.5, "G");
+      doc.line(pw - 199, 67, pw - 199, 162);
+      doc.text(pw - 199 + 5, 69.5, "P");
+      doc.line(pw - 189, 67, pw - 189, 162);
+      doc.text(pw - 189 + 5, 69.5, "%", { align: "center" });
+      doc.line(pw - 209, 67, pw - 8, 67);
+      doc.line(pw - 179, 50, pw - 179, 162);
+      doc.text(pw - 179 + 5, 63, "Flacidos", null, 90);
+      doc.text(pw - 179 + 5, 69.5, "%", { align: "center" });
+      doc.line(pw - 169, 50, pw - 169, 162);
+      doc.text(pw - 169 + 5, 63, "Mudados", null, 90);
+      doc.text(pw - 169 + 5, 69.5, "%", { align: "center" });
+      doc.line(pw - 159, 50, pw - 159, 162);
+      doc.text(pw - 159 + 5, 63, "Picados", null, 90);
+      doc.text(pw - 159 + 5, 69.5, "%", { align: "center" });
+      doc.line(pw - 149, 50, pw - 149, 162);
+      doc.text(pw - 149 + 5, 66.1, "Semirosados", null, 90);
+      doc.text(pw - 149 + 5, 69.5, "%", { align: "center" });
+      doc.line(pw - 139, 50, pw - 139, 162);
+      doc.text(pw - 139 + 5, 63, "Rosados", null, 90);
+      doc.text(pw - 139 + 5, 69.5, "%", { align: "center" });
+      doc.line(pw - 129, 50, pw - 129, 162);
+      doc.text(pw - 129 + 5, 65, "Quebrados", null, 90);
+      doc.text(pw - 129 + 8, 64, "en 3° seg.", null, 90);
+      doc.text(pw - 129 + 5, 69.5, "%", { align: "center" });
+      doc.line(pw - 119, 50, pw - 119, 162);
+      doc.text(pw - 119 + 5, 60, "Mal", null, 90);
+      doc.text(pw - 119 + 8, 66.3, "descabezados", null, 90);
+      doc.text(pw - 119 + 5, 69.5, "%", { align: "center" });
+      doc.line(pw - 109, 50, pw - 109, 162);
+      doc.text(pw - 109 + 5, 66.3, "Deshidratados", null, 90);
+      doc.text(pw - 109 + 5, 69.5, "%", { align: "center" });
+      doc.line(pw - 99, 50, pw - 99, 162);
+      doc.text(pw - 99 + 5, 63, "Melanosis", null, 90);
+      doc.text(pw - 99 + 5, 69.5, "%", { align: "center" });
+      doc.line(pw - 89, 50, pw - 89, 162);
+      doc.text(pw - 89 + 5, 63, "Quebrados", null, 90);
+      doc.text(pw - 89 + 5, 69.5, "%", { align: "center" });
+      doc.line(pw - 79, 50, pw - 79, 162);
+      doc.text(pw - 79 + 5, 63, "Corbatas", null, 90);
+      doc.text(pw - 79 + 5, 69.5, "%", { align: "center" });
+      doc.line(pw - 69, 50, pw - 69, 162);
+      doc.text(pw - 69 + 5, 63, "Patas", null, 90);
+      doc.text(pw - 69 + 5, 69.5, "%", { align: "center" });
+      doc.line(pw - 59, 50, pw - 59, 162);
+      doc.text(pw - 59 + 5, 63, "Deformes", null, 90);
+      doc.text(pw - 59 + 5, 69.5, "%", { align: "center" });
+      doc.line(pw - 49, 50, pw - 49, 162);
+      doc.text(pw - 49 + 5, 63, "Juveniles", null, 90);
+      doc.text(pw - 49 + 5, 69.5, "%", { align: "center" });
+      doc.line(pw - 39, 50, pw - 39, 162);
+      doc.text(pw - 39 + 5, 63, "Materiales", null, 90);
+      doc.text(pw - 39 + 8, 63, "Extraños", null, 90);
+      doc.text(pw - 39 + 5, 69.5, "%", { align: "center" });
+      doc.line(pw - 29, 50, pw - 29, 162);
+      doc.text(pw - 29 + 5, 60, "Total", null, 90);
+      doc.text(pw - 29 + 8, 63, "Defectos", null, 90);
+      doc.text(pw - 29 + 5, 69.5, "%", { align: "center" });
+      doc.line(pw - 19, 50, pw - 19, 162);
+      doc.text(pw - 19 + 10, 60, "T °C", { angle: 90, align: "center" });
+      doc.text(pw - 19 + 5, 69.5, "%", { align: "center" });
+      doc.line(8, 70, pw - 8, 70);
+      doc.line(8, 77, pw - 8, 77);
+      doc.line(8, 84, pw - 8, 84);
+      doc.line(8, 91, pw - 8, 91);
+      doc.line(8, 98, pw - 8, 98);
+      doc.line(8, 105, pw - 8, 105);
+      doc.line(8, 112, pw - 8, 112);
+      doc.line(8, 119, pw - 8, 119);
+      doc.line(8, 126, pw - 8, 126);
+      doc.line(8, 133, pw - 8, 133);
+      doc.line(8, 140, pw - 8, 140);
+      doc.line(8, 147, pw - 8, 147);
+      doc.line(8, 154, pw - 8, 154);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10);
+      doc.text(16, 166, "*Rango de temperatura: <= 4.4°C");
+  
+      /* let obj_firmas = {
+          realizado: array[0].usuario.toUpperCase(),
+          jefe_de_planta: array[array.length - 1].jefe_planta.toUpperCase(),
+          verificado: array[0].verificado.toUpperCase(),
+          supervisor: array[0].supervisor_c_f.supervisor.toUpperCase(),
+          jefe_de_control_calidad: "Dra. Rita Montiel",
+      }
+   */
+      /* --- Footer del documento --- */
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(7);
+      doc.text(10, ph * 0.81, "Observaciones: ");
+  //modificacion
+      doc.text(33, ph - 13,  { align: 'center', maxWidth:45 });
+      doc.line(8, ph - 11, 58, ph - 11);
+      doc.text(33, ph - 8, "Realizado por", { align: "center" });
+  
+      doc.text(pw / 5 + 8 + 25, ph - 13,  { align: 'center', maxWidth:45 });
+      doc.line(pw / 5 + 8, ph - 11, pw / 5 + 8 + 50, ph - 11);
+      doc.text(pw / 5 + 8 + 25, ph - 8, "Supervisor de máquina", { align: "center" });
+  
+      doc.text(pw * (2 / 5) + 8 + 25, ph - 13,  { align: 'center', maxWidth:45 });
+      doc.line(pw * (2 / 5) + 8, ph - 11, pw * (2 / 5) + 8 + 50, ph - 11);
+      doc.text(pw * (2 / 5) + 8 + 25, ph - 8, "Jefe de planta", { align: "center" });
+  
+      doc.text(pw * (3 / 5) + 8 + 25, ph - 13, { align: 'center', maxWidth:45 });
+      doc.line(pw * (3 / 5) + 8, ph - 11, pw * (3 / 5) + 8 + 50, ph - 11);
+      doc.text(pw * (3 / 5) + 8 + 25, ph - 8, "Jefe de control calidad", { align: "center" });
+  
+      doc.text(pw * (4 / 5) + 8 + 22, ph - 13,  { align: 'center', maxWidth:45 });
+      doc.line(pw * (4 / 5) + 8, ph - 11, pw - 8, ph - 11);
+      doc.text(pw * (4 / 5) + 8 + 22, ph - 8, "Verificado por", { align: "center" });
+  
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(6);
+  
+      /* --- Datos del reporte --- */
+   /*    var layout = 75;
+      var listobse = [];
+      var Todo_obse = ""; */
+  
+      /* while (i < limite && i < length) {
+  
+          var splithora = array[i].Fecha.split(" ")[1].split(":");
+          var hora = splithora[0] + ":" + splithora[1];
+          doc.text(9, layout, hora);
+  
+          //textLayout(doc, 17, layout, array[i].importador_c_f.empaque, 18);
+          
+          if (array[i].importador_c_f.empaque.length <= 11) {
+              doc.text(17, layout, array[i].importador_c_f.empaque, {  maxWidth:20 });
+          } else {
+              doc.text(17, layout - 2.7, array[i].importador_c_f.empaque, {  maxWidth: 15.7 });
+              // doc.text(31, layout - 2, array[i].importador_e_f.importador.substring(0, 10));
+              // doc.text(31, layout + 1, array[i].importador_e_f.importador.substring(10, 20));
+          }
+          doc.text(40, layout, array[i].talla_c_f.talla);
+          doc.text(50, layout, array[i].peso_bruto.toFixed(4).replace('.',','));
+          doc.text(60, layout, array[i].peso_neto.toFixed(4).replace('.',','));
+          doc.text(pw - 229 + 5, layout, (array[i].cuenta_total).toFixed(0).replace('.',','), { align: 'center' });
+          doc.text(pw - 219 + 5, layout, (+(array[i].cuentaxlb)).toFixed(0).replace('.',','), { align: 'center' });
+          doc.text(pw - 209 + 5, layout, (+(array[i].uni_g)).toString().replace('.',','), { align: 'center' });
+          doc.text(pw - 199 + 5, layout, (+(array[i].uni_p)).toString().replace('.',','), { align: 'center' });
+          doc.text(pw - 189 + 5, layout, (+(array[i].uni_ut)).toString().replace('.',','), { align: 'center' });
+          doc.text(120, layout, ((Number(array[i].Flacidos) / +(array[i].cuenta_total.toFixed(0))) * 100).toFixed(2).replace('.',','));
+          doc.text(130, layout, ((Number(array[i].Mudados) / +(array[i].cuenta_total.toFixed(0))) * 100).toFixed(2).replace('.',','));
+          doc.text(140, layout, ((Number(array[i].Picados) / +(array[i].cuenta_total.toFixed(0))) * 100).toFixed(2).replace('.',','));
+          doc.text(150, layout, ((Number(array[i].semi_rosado) / +(array[i].cuenta_total.toFixed(0))) * 100).toFixed(2).replace('.',','));
+          doc.text(160, layout, ((Number(array[i].rosado) / +(array[i].cuenta_total.toFixed(0))) * 100).toFixed(2).replace('.',','));
+          doc.text(170, layout, ((Number(array[i].quebrados_3) / +(array[i].cuenta_total.toFixed(0))) * 100).toFixed(2).replace('.',','));
+          doc.text(180, layout, ((Number(array[i].mal_descabezado) / +(array[i].cuenta_total.toFixed(0))) * 100).toFixed(2).replace('.',','));
+          doc.text(190, layout, ((Number(array[i].Deshidratados) / +(array[i].cuenta_total.toFixed(0))) * 100).toFixed(2).replace('.',','));
+          doc.text(200, layout, ((Number(array[i].Melanosis) / +(array[i].cuenta_total.toFixed(0))) * 100).toFixed(2).replace('.',','));
+          doc.text(210, layout, ((Number(array[i].Quebrados) / +(array[i].cuenta_total.toFixed(0))) * 100).toFixed(2).replace('.',','));
+          doc.text(220, layout, ((Number(array[i].corbata) / +(array[i].cuenta_total.toFixed(0))) * 100).toFixed(2).replace('.',','));
+          doc.text(230, layout, ((Number(array[i].patas) / +(array[i].cuenta_total.toFixed(0))) * 100).toFixed(2).replace('.',','));
+          doc.text(240, layout, ((Number(array[i].Deformes) / +(array[i].cuenta_total.toFixed(0))) * 100).toFixed(2).replace('.',','));
+          doc.text(250, layout, ((Number(array[i].Juveniles) / +(array[i].cuenta_total.toFixed(0))) * 100).toFixed(2).replace('.',','));
+          doc.text(260, layout, ((Number(array[i].Materiales_extranos) / +(array[i].cuenta_total.toFixed(0))) * 100).toFixed(2).replace('.',','));
+          doc.text(270, layout, ((Number(array[i].Total_Defectos) / +(array[i].cuenta_total.toFixed(0))) * 100).toFixed(2).replace('.',','));
+          doc.text(280, layout, array[i].Temperatura.toFixed(2).replace('.',','));
+  
+          var observacion = array[i].observacion;
+  
+          if (observacion != null && !listobse.includes(observacion)) {
+              listobse.push(observacion);
+              Todo_obse = Todo_obse + "-" + observacion;
+          }
+  
+          if (array[i].correccion == 1) {
+              correcciones.push({
+                  lugar: array[i].correcciones_c_f.Lugar,
+                  accion: array[i].correcciones_c_f.Acciones,
+                  problema: array[i].correcciones_c_f.Problema,
+                  desviacion: array[i].correcciones_c_f.Desviacion,
+                  fecha_cor: array[i].correcciones_c_f.FechaCorreccion,
+                  fecha_vef: array[i].correcciones_c_f.FechaVerificacion,
+                  verifica: array[i].correcciones_c_f.ResponsableArea,
+                  usuario: array[i].correcciones_c_f.ResponsableSeguimiento,
+                  usuario_verificacion: array[i].correcciones_c_f.Verificacion,
+                  observacion: array[i].correcciones_c_f.ObserCorreccion,
+              });
+          }
+          if(array[i].fotos_c_f != null){
+              array[i].fotos_c_f.forEach(e => {
+                  fotosEtiqueta.push({
+                      ruta: import.meta.env.VITE_STORAGE_CTRL_CAL+'PROCESO_COLA/RCCC20/'+encodeURIComponent(e.NombreFoto),
+                      nombreFoto: e.NombreFoto,
+                  });
+              });
+          }
+  
+          layout += 7;
+          i += 1;
+      } */
+  
+      var Todo_obse = ""; 
+  
+      let lines = doc.splitTextToSize(Todo_obse, 341, {
+          "fontSize": 10,
+          "fontStyle": "Italic",
+          "fontName": "Times"
+      });
+  
+      doc.text(8, ph * 0.83, lines);
+      doc.line(8, 175, pw - 8, 175);
+  
+  
+  /* length = correcciones.length;
+  if (length > 0) {
+      pages = getPaginaCorreccion(doc, pages, length, correcciones, array[0].supervisor_c_f.supervisor.toUpperCase());
+  } */
+  
+  /* length = fotosEtiqueta.length;
+  if (length > 0) {
+      getPaginaFotos(doc, pages, length, fotosEtiqueta)
+  } */
+  
+  /* var total_pages = doc.getNumberOfPages();
+  var current_page = doc.getCurrentPageInfo();
+   */
+  /* 
+  if (pages == current_page.pageNumber) {
+      doc.deletePage(total_pages);
+  }
+   */
+  
+  
+    /* const top = 18;
+    let x_start = 15;
+    doc.text("Cedula", x_start, top);
+    x_start += 20
+    doc.text("Nombre", x_start, top);
+    x_start += 50
+    doc.text("Correo", x_start, top);
+    x_start += 30
+    doc.text("Cargo", x_start, top);
+    x_start += 30
+    doc.text("Area", x_start, top);
+    x_start += 30
+    doc.text("Planta", x_start, top);
+    doc.text("tuptm", x_start + 23, top);
+    doc.line(x, y + 10, width, y + 10) */
+  
+  
+  
+    return doc
+  }
+  
+  module.exports = {
+    PDF_Mejorado,
+  };
+  
